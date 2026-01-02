@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { motion } from 'framer-motion';
 import { Smile, Meh, Frown, BookOpen } from 'lucide-react';
 
 export default function WellnessTracker() {
