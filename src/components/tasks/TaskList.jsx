@@ -12,7 +12,8 @@ export default function TaskList() {
         title: '',
         priority: 'medium', // low, medium, high
         date: format(new Date(), 'yyyy-MM-dd'),
-        time: '12:00'
+        time: '12:00',
+        frequency: 'once' // once, daily
     });
 
     const handleAdd = (e) => {
@@ -31,7 +32,14 @@ export default function TaskList() {
         if (filter === 'active') return !t.completed;
         if (filter === 'completed') return t.completed;
         return true;
-    }).sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+    }).sort((a, b) => {
+        const dateA = new Date((a.date || '') + 'T' + (a.time || ''));
+        const dateB = new Date((b.date || '') + 'T' + (b.time || ''));
+        // Handle invalid dates safely
+        if (isNaN(dateA.getTime())) return 1;
+        if (isNaN(dateB.getTime())) return -1;
+        return dateA - dateB;
+    });
 
     const priorityColors = {
         low: '#10b981',
@@ -117,6 +125,20 @@ export default function TaskList() {
                                 <option value="low">Low Priority</option>
                                 <option value="medium">Medium Priority</option>
                                 <option value="high">High Priority</option>
+                            </select>
+                            <select
+                                value={newTask.frequency}
+                                onChange={e => setNewTask({ ...newTask, frequency: e.target.value })}
+                                style={{
+                                    padding: '8px',
+                                    borderRadius: 'var(--radius-sm)',
+                                    border: '1px solid var(--border-light)',
+                                    background: 'var(--bg-app)',
+                                    color: 'var(--text-main)'
+                                }}
+                            >
+                                <option value="once">Once</option>
+                                <option value="daily">Everyday</option>
                             </select>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
@@ -225,7 +247,17 @@ export default function TaskList() {
                                     </h3>
                                     <div style={{ display: 'flex', gap: '12px', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <CalendarIcon size={14} /> {format(parseISO(task.date), 'MMM d')}
+                                            <CalendarIcon size={14} />
+                                            {task.date ? (
+                                                (() => {
+                                                    try {
+                                                        return format(parseISO(task.date), 'MMM d');
+                                                    } catch (e) {
+                                                        return task.date;
+                                                    }
+                                                })()
+                                            ) : 'No Date'}
+                                            {task.frequency === 'daily' && <span style={{ fontSize: '0.8em', marginLeft: '4px', background: 'var(--bg-app)', padding: '2px 6px', borderRadius: '10px', border: '1px solid var(--border-light)' }}>daily</span>}
                                         </span>
                                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <Clock size={14} /> {task.time}

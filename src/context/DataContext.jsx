@@ -35,32 +35,77 @@ export function DataProvider({ children }) {
     };
 
     const toggleTaskCompletion = (id) => {
-        setTasks(tasks.map(t => {
-            if (t.id === id) {
-                const now = new Date();
-                const isCompleted = !t.completed;
-                let isOnTime = false;
+        setTasks(prevTasks => {
+            const taskIndex = prevTasks.findIndex(t => t.id === id);
+            if (taskIndex === -1) return prevTasks;
 
-                if (isCompleted) {
-                    const dueString = `${t.date}T${t.time}`;
-                    const due = new Date(dueString);
-                    // If due date is valid and now is before due, it's on time
-                    if (!isNaN(due.getTime()) && now <= due) {
-                        isOnTime = true;
-                    }
-                    // If no time specified, assume end of day? Or just date comparison.
-                    // For simplicity, we stick to the combined string comparison.
+            const task = prevTasks[taskIndex];
+            const now = new Date();
+            const isCompleted = !task.completed;
+            let isOnTime = false;
+
+            if (isCompleted) {
+                const dueString = `${task.date}T${task.time}`;
+                const due = new Date(dueString);
+                if (!isNaN(due.getTime()) && now <= due) {
+                    isOnTime = true;
                 }
 
-                return {
-                    ...t,
-                    completed: isCompleted,
-                    completedAt: isCompleted ? now.toISOString() : null,
-                    isOnTime: isCompleted ? isOnTime : false
-                };
+                // Handle Recurring Tasks
+                if (task.frequency === 'daily') {
+                    // Check if we already created a task for tomorrow to avoid duplicates (basic check)
+                    // Or simpler: just create it. Most users won't spam click toggle.
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const nextDateStr = tomorrow.toISOString().split('T')[0];
+
+                    // Optional: check if duplicate already exists for that date?
+                    // For now, let's just create it to ensure reliability.
+                    const newDailyTask = {
+                        ...task,
+                        id: Date.now().toString(), // New ID
+                        date: nextDateStr,
+                        completed: false,
+                        completedAt: null,
+                        isOnTime: true // Reset for new task
+                    };
+
+                    // We need to return the new list including the new task
+                    // But we can't update state inside the map cleanly if we are mapping.
+                    // So we changed setTasks(tasks.map(...)) to setTasks(prevTasks => ...) and use logic here.
+                }
             }
-            return t;
-        }));
+
+            const updatedTask = {
+                ...task,
+                completed: isCompleted,
+                completedAt: isCompleted ? now.toISOString() : null,
+                isOnTime: isCompleted ? isOnTime : false
+            };
+
+            const newTasks = [...prevTasks];
+            newTasks[taskIndex] = updatedTask;
+
+            // If it was a daily task and we just finished it, add the new one
+            if (isCompleted && task.frequency === 'daily') {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const nextDateStr = tomorrow.toISOString().split('T')[0];
+
+                const newDailyTask = {
+                    ...task,
+                    id: (Date.now() + 1).toString(), // Ensure different ID
+                    date: nextDateStr,
+                    completed: false,
+                    completedAt: null,
+                    isOnTime: true,
+                    // Keep frequency daily so it propagates
+                };
+                newTasks.push(newDailyTask);
+            }
+
+            return newTasks;
+        });
     };
 
     // --- Habit Operations ---
