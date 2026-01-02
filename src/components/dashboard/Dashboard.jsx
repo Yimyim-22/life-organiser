@@ -135,7 +135,7 @@ export default function Dashboard() {
         <Widget title="Finance Balance" icon={Wallet} color="#10B981" link="/finance">
           <div style={{ textAlign: 'center', padding: '10px 0' }}>
             <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: balance >= 0 ? '#10B981' : '#EF4444' }}>
-              ${balance.toFixed(2)}
+              ₦{balance.toFixed(2)}
             </span>
             <p style={{ color: 'var(--text-muted)' }}>Current Balance</p>
           </div>

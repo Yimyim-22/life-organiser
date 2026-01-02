@@ -50,9 +50,20 @@ export default function WellnessTracker() {
                 </div>
                 {recommendation && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        style={{ textAlign: 'center', marginTop: '16px', padding: '12px', background: 'var(--bg-app)', borderRadius: 'var(--radius-sm)', color: 'var(--color-primary)', fontStyle: 'italic' }}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        style={{
+                            textAlign: 'center',
+                            marginTop: '20px',
+                            padding: '20px',
+                            background: 'var(--bg-app)',
+                            borderRadius: 'var(--radius-md)',
+                            color: 'var(--color-primary)',
+                            fontSize: '1.05rem',
+                            fontWeight: '500',
+                            border: '1px solid var(--border-light)',
+                            boxShadow: 'var(--shadow-sm)'
+                        }}
                     >
                         {recommendation}
                     </motion.div>
