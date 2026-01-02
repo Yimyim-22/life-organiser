@@ -49,7 +49,7 @@ export default function TaskList() {
 
     return (
         <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '10px' }}>
                 <h1 className="text-gradient">Tasks</h1>
                 <button
                     onClick={() => setIsAdding(!isAdding)}
@@ -61,7 +61,8 @@ export default function TaskList() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        fontWeight: '600'
+                        fontWeight: '600',
+                        fontSize: '0.9rem'
                     }}
                 >
                     <Plus size={20} /> Add Task
@@ -85,8 +86,9 @@ export default function TaskList() {
                             style={{
                                 width: '100%',
                                 maxWidth: '100%',
+                                minWidth: 0,
                                 boxSizing: 'border-box',
-                                padding: '12px',
+                                padding: '12px 0',
                                 fontSize: '1.1rem',
                                 border: 'none',
                                 background: 'transparent',
@@ -95,22 +97,22 @@ export default function TaskList() {
                             }}
                         />
                         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '120px' }}>
                                 <CalendarIcon size={18} color="var(--text-muted)" />
                                 <input
                                     type="date"
                                     value={newTask.date}
                                     onChange={e => setNewTask({ ...newTask, date: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%', minWidth: 0, flex: 1 }}
                                 />
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '100px' }}>
                                 <Clock size={18} color="var(--text-muted)" />
                                 <input
                                     type="time"
                                     value={newTask.time}
                                     onChange={e => setNewTask({ ...newTask, time: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%', minWidth: 0, flex: 1 }}
                                 />
                             </div>
                             <select
@@ -245,7 +247,8 @@ export default function TaskList() {
                                     <h3 style={{
                                         fontSize: '1.1rem',
                                         textDecoration: task.completed ? 'line-through' : 'none',
-                                        fontWeight: '500'
+                                        fontWeight: '500',
+                                        wordBreak: 'break-word'
                                     }}>
                                         {task.title}
                                     </h3>
