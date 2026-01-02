@@ -1,10 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserContext';
-import { Moon, Sun, Monitor, Type, Zap, Layout } from 'lucide-react';
+import { Moon, Sun, Monitor, Type, Zap, Layout, Palette, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
     const { settings, updateSettings, logout } = useUser();
+
+    // Local state for color pickers to avoid laggy inputs
+    const [colors, setColors] = useState(settings.customColors || {
+        accent: '#6366f1',
+        text: '#000000',
+        background: '#ffffff',
+        card: '#ffffff'
+    });
+
+    useEffect(() => {
+        if (settings.customColors) {
+            setColors(prev => ({ ...prev, ...settings.customColors }));
+        }
+    }, [settings.customColors]);
+
+    const handleColorChange = (key, value) => {
+        const newColors = { ...colors, [key]: value };
+        setColors(newColors);
+        updateSettings({
+            customColors: newColors,
+            accentColor: key === 'accent' ? value : settings.accentColor
+        });
+    };
+
+    const resetColors = () => {
+        const defaultColors = {
+            accent: '#6366f1',
+            text: '',
+            background: '',
+            card: ''
+        };
+        updateSettings({ customColors: defaultColors, accentColor: '#6366f1' });
+        setColors(defaultColors);
+    };
 
     const handleThemeChange = (theme) => {
         updateSettings({ theme });
@@ -23,6 +57,54 @@ export default function Settings() {
     return (
         <div className="container" style={{ maxWidth: '800px' }}>
             <h1 className="text-gradient" style={{ marginBottom: '32px' }}>Settings</h1>
+
+            <Section title="Color Customization" icon={Palette}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+                    {[
+                        { key: 'accent', label: 'Accent Color' },
+                        { key: 'text', label: 'Text Color' },
+                        { key: 'background', label: 'Background' },
+                        { key: 'card', label: 'Table / Card' }
+                    ].map(({ key, label }) => (
+                        <div key={key}>
+                            <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '8px', color: 'var(--text-muted)' }}>{label}</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <input
+                                    type="color"
+                                    value={colors[key] || '#000000'}
+                                    onChange={(e) => handleColorChange(key, e.target.value)}
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        padding: '0',
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        cursor: 'pointer'
+                                    }}
+                                />
+                                <span style={{ fontSize: '0.85rem', fontFamily: 'monospace' }}>{colors[key] || 'Default'}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <button
+                    onClick={resetColors}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 16px',
+                        background: 'transparent',
+                        border: '1px solid var(--border-light)',
+                        borderRadius: 'var(--radius-sm)',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.9rem'
+                    }}
+                >
+                    <RotateCcw size={14} /> Reset Colors
+                </button>
+            </Section>
 
             <Section title="Appearance" icon={Monitor}>
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>

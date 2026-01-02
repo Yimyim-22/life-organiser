@@ -8,6 +8,12 @@ export function UserProvider({ children }) {
     const [settings, setSettings] = useLocalStorage('life-organizer-settings', {
         theme: 'light', // light, dark
         accentColor: '#6366f1',
+        customColors: {
+            text: '',
+            background: '',
+            card: '',
+            accent: '#6366f1'
+        },
         fontSize: 'medium', // small, medium, large
         animationsEnabled: true,
     });
@@ -16,20 +22,31 @@ export function UserProvider({ children }) {
     useEffect(() => {
         const root = window.document.documentElement;
 
-        // Theme
+        // Theme (Base)
         if (settings.theme === 'dark') {
             root.setAttribute('data-theme', 'dark');
         } else {
             root.removeAttribute('data-theme');
         }
 
-        // Accent Color (Updating the HSL variable if possible, or HEX)
-        // For simplicity, we can set --color-primary directly if passing HEX
-        // But our CSS uses HSL. Let's try to set --color-primary to the hex value, 
-        // though HSL is better. For now, assuming standard pre-defined themes or just hex.
-        // If user provides Hex, we might need a converter. 
-        // Start with just Font Size for simplicity and reliability.
+        // Apply Custom Colors if present
+        // We override the variables directly. If empty, we remove the inline style to fallback to CSS class.
+        const setOrRemove = (varName, value) => {
+            if (value) root.style.setProperty(varName, value);
+            else root.style.removeProperty(varName);
+        };
 
+        const colors = settings.customColors || {};
+        setOrRemove('--color-primary', colors.accent || settings.accentColor);
+        // Also update the hue-based vars if possible, but overriding the final color is safer for Hex inputs
+        // Note: text-gradient uses vars, so we might need to ensure --color-primary is enough.
+
+        setOrRemove('--bg-app', colors.background);
+        setOrRemove('--bg-card', colors.card);
+        setOrRemove('--bg-sidebar', colors.card); // Sync sidebar with card/table
+        setOrRemove('--text-main', colors.text);
+
+        // Font Size
         const fontSizes = { small: '14px', medium: '16px', large: '18px' };
         root.style.setProperty('--font-size-base', fontSizes[settings.fontSize] || '16px');
         document.body.style.fontSize = fontSizes[settings.fontSize] || '16px';

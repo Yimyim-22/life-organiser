@@ -30,16 +30,50 @@ export default function Layout({ children }) {
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
             {/* Mobile Header */}
+            {/* Mobile Header */}
             <div
                 style={{
                     display: 'none',
-                    '@media(max-width: 768px)': { display: 'flex' }
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '16px 20px',
+                    background: 'var(--bg-card)',
+                    borderBottom: '1px solid var(--border-light)',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 90
                 }}
                 className="mobile-header"
             >
-                {/* We generally handle media queries in CSS, but inline for now or check index.css */}
-                {/* For this Layout, creating a separate sidebar component is cleaner but keeping it here for simplicity. */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <button onClick={toggleMenu} style={{ background: 'transparent', padding: '4px' }}>
+                        <Menu size={24} color="var(--text-main)" />
+                    </button>
+                    <h2 className="text-gradient" style={{ fontSize: '1.2rem', margin: 0 }}>Life Organizer</h2>
+                </div>
             </div>
+
+            {/* Mobile Backdrop */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            background: 'rgba(0,0,0,0.5)',
+                            zIndex: 95,
+                            display: 'none' // Hidden by default, shown via CSS for mobile
+                        }}
+                        className="mobile-backdrop"
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Sidebar */}
             <aside
@@ -54,9 +88,10 @@ export default function Layout({ children }) {
                     height: '100vh',
                     zIndex: 100,
                     left: 0,
-                    top: 0
+                    top: 0,
+                    transition: 'transform 0.3s ease'
                 }}
-                className="desktop-sidebar"
+                className={`desktop-sidebar ${isMobileMenuOpen ? 'open' : ''}`}
             >
                 <div style={{ marginBottom: '40px', paddingLeft: '12px' }}>
                     <h2 className="text-gradient" style={{ fontSize: '1.5rem' }}>Life Organizer</h2>
@@ -117,16 +152,23 @@ export default function Layout({ children }) {
             {/* Setup media query via style tag for mobile sidebar hiding */}
             <style>{`
         @media (max-width: 768px) {
+          .mobile-header {
+             display: flex !important;
+          }
+          .mobile-backdrop {
+             display: block !important;
+          }
           .desktop-sidebar {
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+          }
+          .desktop-sidebar.open {
+            transform: translateX(0);
           }
           main {
             margin-left: 0 !important;
             padding: 20px !important;
             padding-top: 80px !important;
           }
-           /* Mobile Header implementation needed */
         }
       `}</style>
         </div>
