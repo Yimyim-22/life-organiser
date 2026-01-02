@@ -5,6 +5,7 @@ const UserContext = createContext();
 
 export function UserProvider({ children }) {
     const [user, setUser] = useLocalStorage('life-organizer-user', null);
+    const [accounts, setAccounts] = useLocalStorage('life-organizer-accounts', []); // Store registered accounts
     const [settings, setSettings] = useLocalStorage('life-organizer-settings', {
         theme: 'light', // light, dark
         accentColor: '#6366f1',
@@ -63,7 +64,31 @@ export function UserProvider({ children }) {
     }, [settings]);
 
     const updateUser = (userData) => {
-        setUser({ ...user, ...userData });
+        const updatedUser = { ...user, ...userData };
+        setUser(updatedUser);
+        // Also update in accounts
+        setAccounts(accounts.map(acc => acc.email === user.email ? updatedUser : acc));
+    };
+
+    const register = (userData) => {
+        // Check if user already exists
+        const existing = accounts.find(acc => acc.email === userData.email);
+        if (existing) {
+            alert("Account with this email already exists. Please Sign In.");
+            return false;
+        }
+        setAccounts([...accounts, userData]);
+        setUser(userData);
+        return true;
+    };
+
+    const login = (email, password) => {
+        const account = accounts.find(acc => acc.email === email && acc.password === password);
+        if (account) {
+            setUser(account);
+            return true;
+        }
+        return false;
     };
 
     const updateSettings = (newSettings) => {
@@ -77,7 +102,7 @@ export function UserProvider({ children }) {
     };
 
     return (
-        <UserContext.Provider value={{ user, settings, updateUser, updateSettings, logout }}>
+        <UserContext.Provider value={{ user, settings, updateUser, updateSettings, logout, login, register }}>
             {children}
         </UserContext.Provider>
     );
