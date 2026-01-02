@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useUser } from '../../context/UserContext';
+import {
+    LayoutDashboard, CheckSquare, Calendar, Target,
+    Wallet, BookOpen, Settings, LogOut, GraduationCap, X, Menu, Heart
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+export default function Layout({ children }) {
+    const { user, logout } = useUser();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+    const navItems = [
+        { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/tasks', label: 'Tasks', icon: CheckSquare },
+        { path: '/calendar', label: 'Calendar', icon: Calendar },
+        ...(user?.occupation === 'Student' ? [
+            { path: '/student', label: 'Student', icon: GraduationCap }
+        ] : []),
+        { path: '/goals', label: 'Goals', icon: Target },
+        { path: '/wellness', label: 'Wellness', icon: Heart }, // Added Wellness
+        { path: '/finance', label: 'Finances', icon: Wallet },
+        { path: '/notes', label: 'Notes', icon: BookOpen },
+        { path: '/settings', label: 'Settings', icon: Settings },
+    ];
+
+    return (
+        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
+            {/* Mobile Header */}
+            <div
+                style={{
+                    display: 'none',
+                    '@media(max-width: 768px)': { display: 'flex' }
+                }}
+                className="mobile-header"
+            >
+                {/* We generally handle media queries in CSS, but inline for now or check index.css */}
+                {/* For this Layout, creating a separate sidebar component is cleaner but keeping it here for simplicity. */}
+            </div>
+
+            {/* Sidebar */}
+            <aside
+                style={{
+                    width: '260px',
+                    background: 'var(--bg-sidebar)',
+                    borderRight: '1px solid var(--border-light)',
+                    padding: '24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'fixed',
+                    height: '100vh',
+                    zIndex: 100,
+                    left: 0,
+                    top: 0
+                }}
+                className="desktop-sidebar"
+            >
+                <div style={{ marginBottom: '40px', paddingLeft: '12px' }}>
+                    <h2 className="text-gradient" style={{ fontSize: '1.5rem' }}>Life Organizer</h2>
+                </div>
+
+                <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {navItems.map((item) => (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            style={({ isActive }) => ({
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '12px',
+                                borderRadius: 'var(--radius-sm)',
+                                color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
+                                background: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+                                fontWeight: isActive ? 600 : 500,
+                                transition: 'all 0.2s'
+                            })}
+                        >
+                            <item.icon size={20} />
+                            {item.label}
+                        </NavLink>
+                    ))}
+                </nav>
+
+                <button
+                    onClick={logout}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '12px',
+                        color: 'var(--text-muted)',
+                        marginTop: 'auto',
+                        background: 'transparent',
+                        textAlign: 'left'
+                    }}
+                >
+                    <LogOut size={20} />
+                    Sign Out
+                </button>
+            </aside>
+
+            {/* Main Content */}
+            <main
+                style={{
+                    flex: 1,
+                    marginLeft: '260px',
+                    padding: '40px'
+                }}
+            >
+                {children}
+            </main>
+
+            {/* Setup media query via style tag for mobile sidebar hiding */}
+            <style>{`
+        @media (max-width: 768px) {
+          .desktop-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+          }
+          main {
+            margin-left: 0 !important;
+            padding: 20px !important;
+            padding-top: 80px !important;
+          }
+           /* Mobile Header implementation needed */
+        }
+      `}</style>
+        </div>
+    );
+}
