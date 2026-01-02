@@ -97,7 +97,7 @@ export default function Layout({ children }) {
                     <h2 className="text-gradient" style={{ fontSize: '1.5rem' }}>Life Organizer</h2>
                 </div>
 
-                <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', minHeight: 0, paddingRight: '4px' }}>
                     {navItems.map((item) => (
                         <NavLink
                             key={item.path}
@@ -111,7 +111,8 @@ export default function Layout({ children }) {
                                 color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
                                 background: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
                                 fontWeight: isActive ? 600 : 500,
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                flexShrink: 0 // Prevent shrinking
                             })}
                         >
                             <item.icon size={20} />

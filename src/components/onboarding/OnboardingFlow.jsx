@@ -48,7 +48,7 @@ export default function OnboardingFlow() {
                         Plan, organize, track, and reflect on your day-to-day life.
                         Balance productivity with wellness without the pressure.
                     </p>
-                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
                             onClick={() => { setIsSignIn(false); setStep(1); }}
                             style={{
@@ -59,7 +59,8 @@ export default function OnboardingFlow() {
                                 borderRadius: 'var(--radius-lg)',
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '8px'
+                                gap: '8px',
+                                whiteSpace: 'nowrap'
                             }}
                         >
                             Get Started <ChevronRight size={20} />
@@ -73,7 +74,8 @@ export default function OnboardingFlow() {
                                 color: 'var(--color-primary)',
                                 border: '2px solid var(--color-primary)',
                                 borderRadius: 'var(--radius-lg)',
-                                fontWeight: '600'
+                                fontWeight: '600',
+                                whiteSpace: 'nowrap'
                             }}
                         >
                             Sign In
