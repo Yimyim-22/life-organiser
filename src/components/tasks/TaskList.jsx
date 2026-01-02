@@ -76,7 +76,7 @@ export default function TaskList() {
                     className="card"
                     style={{ marginBottom: '24px', padding: '20px' }}
                 >
-                    <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
                         <input
                             autoFocus
                             placeholder="What do you need to do?"
@@ -84,6 +84,8 @@ export default function TaskList() {
                             onChange={e => setNewTask({ ...newTask, title: e.target.value })}
                             style={{
                                 width: '100%',
+                                maxWidth: '100%',
+                                boxSizing: 'border-box',
                                 padding: '12px',
                                 fontSize: '1.1rem',
                                 border: 'none',
@@ -99,7 +101,7 @@ export default function TaskList() {
                                     type="date"
                                     value={newTask.date}
                                     onChange={e => setNewTask({ ...newTask, date: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%' }}
                                 />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -108,7 +110,7 @@ export default function TaskList() {
                                     type="time"
                                     value={newTask.time}
                                     onChange={e => setNewTask({ ...newTask, time: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%' }}
                                 />
                             </div>
                             <select
@@ -119,7 +121,8 @@ export default function TaskList() {
                                     borderRadius: 'var(--radius-sm)',
                                     border: '1px solid var(--border-light)',
                                     background: 'var(--bg-app)',
-                                    color: 'var(--text-main)'
+                                    color: 'var(--text-main)',
+                                    maxWidth: '100%'
                                 }}
                             >
                                 <option value="low">Low Priority</option>
@@ -134,7 +137,8 @@ export default function TaskList() {
                                     borderRadius: 'var(--radius-sm)',
                                     border: '1px solid var(--border-light)',
                                     background: 'var(--bg-app)',
-                                    color: 'var(--text-main)'
+                                    color: 'var(--text-main)',
+                                    maxWidth: '100%'
                                 }}
                             >
                                 <option value="once">Once</option>
@@ -152,9 +156,9 @@ export default function TaskList() {
 
             {/* Recommended Tasks */}
             {isAdding && (
-                <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '10px' }}>
+                <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '10px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
                     <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Recommended for you:</p>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ display: 'flex', gap: '10px', width: 'max-content' }}>
                         {[
                             "Tidy your room",
                             "Do laundry / fold clothes",
