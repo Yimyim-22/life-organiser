@@ -71,6 +71,12 @@ export default function GoalsTracker() {
                         {activeTab === 'goals' && (
                             <input placeholder="Target description (e.g. Save $500)" value={newItem.target} onChange={e => setNewItem({ ...newItem, target: e.target.value })} style={{ padding: '10px', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-sm)' }} />
                         )}
+                        {activeTab === 'goals' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Target Date</label>
+                                <input type="date" value={newItem.date || ''} onChange={e => setNewItem({ ...newItem, date: e.target.value })} style={{ padding: '10px', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-sm)' }} />
+                            </div>
+                        )}
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <button type="button" onClick={() => setIsAdding(false)} style={{ flex: 1, padding: '10px', background: 'transparent', border: '1px solid var(--border-light)' }}>Cancel</button>
                             <button type="submit" style={{ flex: 1, padding: '10px', background: 'var(--color-primary)', color: 'white', border: 'none' }}>Save</button>
@@ -100,7 +106,9 @@ export default function GoalsTracker() {
                             <h3 style={{ fontSize: '1.1rem' }}>{g.title}</h3>
                             <Target size={20} color="var(--color-primary)" />
                         </div>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '15px' }}>{g.target}</p>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '5px' }}>{g.target}</p>
+                        {g.date && <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '15px' }}>Target Date: {new Date(g.date).toLocaleDateString()}</p>}
+
                         <div style={{ width: '100%', height: '8px', background: 'var(--border-light)', borderRadius: '4px', overflow: 'hidden' }}>
                             <div style={{ width: `${g.progress}%`, height: '100%', background: 'var(--color-primary)' }} />
                         </div>

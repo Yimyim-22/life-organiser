@@ -127,6 +127,44 @@ export default function TaskList() {
                 </motion.div>
             )}
 
+
+            {/* Recommended Tasks */}
+            {isAdding && (
+                <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '10px' }}>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Recommended for you:</p>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        {[
+                            "Tidy your room",
+                            "Do laundry / fold clothes",
+                            "Creative time (Draw, Code, Read)",
+                            "Prepare school bag for tomorrow",
+                            "Review yesterday's notes",
+                            "Complete homework"
+                        ].map(rec => (
+                            <button
+                                key={rec}
+                                onClick={() => setNewTask({ ...newTask, title: rec })}
+                                style={{
+                                    padding: '6px 12px',
+                                    borderRadius: '20px',
+                                    background: 'var(--bg-card)',
+                                    border: '1px solid var(--border-light)',
+                                    color: 'var(--text-main)',
+                                    fontSize: '0.85rem',
+                                    whiteSpace: 'nowrap',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}
+                                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-light)'}
+                            >
+                                + {rec}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Filters */}
             <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
                 {['all', 'active', 'completed'].map(f => (

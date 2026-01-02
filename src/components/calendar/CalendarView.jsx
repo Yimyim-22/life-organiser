@@ -4,7 +4,7 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInte
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function CalendarView() {
-    const { tasks } = useData();
+    const { tasks, assignments, exams } = useData();
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const days = eachDayOfInterval({
@@ -35,6 +35,13 @@ export default function CalendarView() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
                     {days.map((day, idx) => {
                         const dayTasks = tasks.filter(t => isSameDay(new Date(t.date), day));
+
+                        // Filter Assignments (by due date)
+                        const dayAssignments = assignments ? assignments.filter(a => a.due && isSameDay(new Date(a.due), day)) : [];
+
+                        // Filter Exams
+                        const dayExams = exams ? exams.filter(e => e.date && isSameDay(new Date(e.date), day)) : [];
+
                         const isCurrentMonth = isSameMonth(day, currentMonth);
                         const isToday = isSameDay(day, new Date());
 
@@ -71,6 +78,7 @@ export default function CalendarView() {
                                     </span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    {/* Tasks */}
                                     {dayTasks.map(t => (
                                         <div key={t.id} style={{
                                             fontSize: '0.75rem',
@@ -84,6 +92,39 @@ export default function CalendarView() {
                                             textDecoration: t.completed ? 'line-through' : 'none'
                                         }}>
                                             {t.time} {t.title}
+                                        </div>
+                                    ))}
+
+                                    {/* Assignments */}
+                                    {dayAssignments.map(a => (
+                                        <div key={a.id} style={{
+                                            fontSize: '0.75rem',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            background: 'rgba(59, 130, 246, 0.1)',
+                                            color: '#3b82f6',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}>
+                                            📝 {a.title}
+                                        </div>
+                                    ))}
+
+                                    {/* Exams */}
+                                    {dayExams.map(e => (
+                                        <div key={e.id} style={{
+                                            fontSize: '0.75rem',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            background: 'rgba(236, 72, 153, 0.1)',
+                                            color: '#ec4899',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            🎓 {e.subject} Exam
                                         </div>
                                     ))}
                                 </div>

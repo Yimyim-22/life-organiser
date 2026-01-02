@@ -57,6 +57,44 @@ export default function Dashboard() {
         <p style={{ opacity: 0.9, fontSize: '1.1rem' }}>Ready to organize your life today?</p>
       </header>
 
+      {/* Quick Access Grid */}
+      <h3 style={{ marginBottom: '16px', fontSize: '1.2rem' }}>Quick Access</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        {[
+          { title: 'Tasks', icon: CheckCircle, color: '#6366f1', link: '/tasks' },
+          { title: 'Calendar', icon: Clock, color: '#8b5cf6', link: '/calendar' },
+          ...(user.occupation === 'Student' ? [{ title: 'Student', icon: GraduationCap, color: '#3b82f6', link: '/student' }] : []),
+          { title: 'Goals', icon: Target, color: '#f59e0b', link: '/goals' },
+          { title: 'Finance', icon: Wallet, color: '#10b981', link: '/finance' },
+          { title: 'Wellness', icon: Heart, color: '#ec4899', link: '/wellness' },
+        ].map((item) => (
+          <Link
+            key={item.title}
+            to={item.link}
+            className="card"
+            style={{
+              padding: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              textDecoration: 'none',
+              color: 'var(--text-main)',
+              transition: 'transform 0.2s',
+              textAlign: 'center'
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <div style={{ padding: '12px', borderRadius: '50%', background: `${item.color}20`, color: item.color }}>
+              <item.icon size={24} />
+            </div>
+            <span style={{ fontWeight: '500' }}>{item.title}</span>
+          </Link>
+        ))}
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
 
         {/* Today's Focus */}
