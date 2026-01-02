@@ -52,44 +52,8 @@ export default function StudentSection() {
                 {activeTab === 'classes' && (
                     <>
                         <input placeholder="Location / Link" value={newItem.location || ''} onChange={e => setNewItem({ ...newItem, location: e.target.value })} style={{ padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-light)' }} />
-                        {/* Day Picker */}
-                        <div>
-                            <p style={{ fontSize: '0.9rem', marginBottom: '8px', fontWeight: '500' }}>Days</p>
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => {
-                                    const isSelected = newItem.days?.includes(day);
-                                    return (
-                                        <button
-                                            key={day}
-                                            type="button"
-                                            onClick={() => {
-                                                const currentDays = newItem.days ? newItem.days.split(', ').filter(d => d) : [];
-                                                let newDays;
-                                                if (isSelected) newDays = currentDays.filter(d => d !== day);
-                                                else newDays = [...currentDays, day];
-
-                                                // Sort days based on standard week
-                                                const dayOrder = { 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
-                                                newDays.sort((a, b) => dayOrder[a] - dayOrder[b]);
-
-                                                setNewItem({ ...newItem, days: newDays.join(', ') });
-                                            }}
-                                            style={{
-                                                padding: '6px 12px',
-                                                borderRadius: '20px',
-                                                border: isSelected ? '1px solid var(--color-primary)' : '1px solid var(--border-light)',
-                                                background: isSelected ? 'var(--color-primary)' : 'transparent',
-                                                color: isSelected ? 'white' : 'var(--text-muted)',
-                                                fontSize: '0.85rem'
-                                            }}
-                                        >
-                                            {day}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                        <input type="time" value={newItem.time || ''} onChange={e => setNewItem({ ...newItem, time: e.target.value })} style={{ padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-light)' }} />
+                        <label style={{ fontSize: '0.9rem', fontWeight: '500' }}>Date & Time</label>
+                        <input type="datetime-local" required value={newItem.date || ''} onChange={e => setNewItem({ ...newItem, date: e.target.value })} style={{ padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-light)' }} />
                     </>
                 )}
 
@@ -135,7 +99,10 @@ export default function StudentSection() {
 
                         {activeTab === 'classes' && (
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} /> {item.days || 'No days set'} @ {item.time || 'TBD'}</span>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <Clock size={14} />
+                                    {item.date ? new Date(item.date).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : 'No Date'}
+                                </span>
                                 {item.location && <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={14} /> {item.location}</span>}
                             </div>
                         )}

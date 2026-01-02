@@ -129,3 +129,22 @@ a {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Fix for iOS zooming on focus */
+@media screen and (max-width: 768px) {
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Ensure date inputs are tappable on mobile */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  min-height: 44px;
+  /* Minimum touch target size */
+  font-family: inherit;
+}
