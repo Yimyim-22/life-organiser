@@ -144,7 +144,8 @@ export default function Layout({ children }) {
                 style={{
                     flex: 1,
                     marginLeft: '260px',
-                    padding: '40px'
+                    padding: '40px',
+                    minWidth: 0 // Prevent flex child specific overflow issues
                 }}
             >
                 {children}

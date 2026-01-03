@@ -149,7 +149,7 @@ export default function TaskList() {
 
             {/* Recommended Tasks */}
             {isAdding && (
-                <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '10px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
+                <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '10px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' }}>
                     <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Recommended for you:</p>
                     <div style={{ display: 'flex', gap: '10px', width: 'max-content' }}>
                         {[
