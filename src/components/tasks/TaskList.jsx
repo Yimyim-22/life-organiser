@@ -83,73 +83,64 @@ export default function TaskList() {
                             placeholder="What do you need to do?"
                             value={newTask.title}
                             onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+                            className="form-input"
                             style={{
-                                width: '100%',
-                                maxWidth: '100%',
-                                minWidth: 0,
-                                boxSizing: 'border-box',
-                                padding: '12px 0',
-                                fontSize: '1.1rem',
                                 border: 'none',
+                                borderBottom: '2px solid var(--border-light)',
                                 background: 'transparent',
-                                outline: 'none',
-                                borderBottom: '2px solid var(--border-light)'
+                                borderRadius: 0,
+                                paddingLeft: 0,
+                                fontSize: '1.2rem',
+                                fontWeight: '500'
                             }}
                         />
-                        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '120px' }}>
+
+                        <div className="form-grid">
+                            {/* Date Field - wrapped to include icon */}
+                            <div className="form-input" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
                                 <CalendarIcon size={18} color="var(--text-muted)" />
                                 <input
                                     type="date"
                                     value={newTask.date}
                                     onChange={e => setNewTask({ ...newTask, date: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%', minWidth: 0, flex: 1 }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', width: '100%', outline: 'none' }}
                                 />
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '100px' }}>
+
+                            {/* Time Field */}
+                            <div className="form-input" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
                                 <Clock size={18} color="var(--text-muted)" />
                                 <input
                                     type="time"
                                     value={newTask.time}
                                     onChange={e => setNewTask({ ...newTask, time: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', maxWidth: '100%', minWidth: 0, flex: 1 }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', width: '100%', outline: 'none' }}
                                 />
                             </div>
+
                             <select
                                 value={newTask.priority}
                                 onChange={e => setNewTask({ ...newTask, priority: e.target.value })}
-                                style={{
-                                    padding: '8px',
-                                    borderRadius: 'var(--radius-sm)',
-                                    border: '1px solid var(--border-light)',
-                                    background: 'var(--bg-app)',
-                                    color: 'var(--text-main)',
-                                    maxWidth: '100%'
-                                }}
+                                className="form-input"
                             >
                                 <option value="low">Low Priority</option>
                                 <option value="medium">Medium Priority</option>
                                 <option value="high">High Priority</option>
                             </select>
+
                             <select
                                 value={newTask.frequency}
                                 onChange={e => setNewTask({ ...newTask, frequency: e.target.value })}
-                                style={{
-                                    padding: '8px',
-                                    borderRadius: 'var(--radius-sm)',
-                                    border: '1px solid var(--border-light)',
-                                    background: 'var(--bg-app)',
-                                    color: 'var(--text-main)',
-                                    maxWidth: '100%'
-                                }}
+                                className="form-input"
                             >
                                 <option value="once">Once</option>
                                 <option value="daily">Everyday</option>
                             </select>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
                             <button type="button" onClick={() => setIsAdding(false)} style={{ background: 'transparent', color: 'var(--text-muted)' }}>Cancel</button>
-                            <button type="submit" style={{ background: 'var(--color-primary)', color: 'white', padding: '8px 24px', borderRadius: 'var(--radius-sm)' }}>Save Task</button>
+                            <button type="submit" style={{ background: 'var(--color-primary)', color: 'white', padding: '10px 24px', borderRadius: 'var(--radius-sm)', fontWeight: 600 }}>Save Task</button>
                         </div>
                     </form>
                 </motion.div>

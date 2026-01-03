@@ -137,6 +137,34 @@ a {
   -webkit-text-fill-color: transparent;
 }
 
+/* --- Responsive Form Grid --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  /* Comfortable touch target */
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background: var(--bg-app);
+  color: var(--text-main);
+  font-size: 1rem;
+  /* Prevent zoom on iOS */
+  min-width: 0;
+  /* Flex fix */
+}
+
 /* Fix for iOS zooming on focus */
 @media screen and (max-width: 768px) {
 
