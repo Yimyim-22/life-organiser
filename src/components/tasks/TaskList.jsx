@@ -75,7 +75,7 @@ export default function TaskList() {
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     className="card"
-                    style={{ marginBottom: '24px', padding: '20px' }}
+                    style={{ marginBottom: '24px' }}
                 >
                     <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
                         <input
@@ -91,7 +91,9 @@ export default function TaskList() {
                                 borderRadius: 0,
                                 paddingLeft: 0,
                                 fontSize: '1.2rem',
-                                fontWeight: '500'
+                                fontWeight: '500',
+                                width: '100%',
+                                minWidth: 0 // Ensure it shrinks
                             }}
                         />
 
@@ -103,7 +105,7 @@ export default function TaskList() {
                                     type="date"
                                     value={newTask.date}
                                     onChange={e => setNewTask({ ...newTask, date: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', width: '100%', outline: 'none' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', flex: 1, minWidth: 0, outline: 'none' }}
                                 />
                             </div>
 
@@ -114,7 +116,7 @@ export default function TaskList() {
                                     type="time"
                                     value={newTask.time}
                                     onChange={e => setNewTask({ ...newTask, time: e.target.value })}
-                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', width: '100%', outline: 'none' }}
+                                    style={{ border: 'none', background: 'transparent', color: 'var(--text-main)', flex: 1, minWidth: 0, outline: 'none' }}
                                 />
                             </div>
 
