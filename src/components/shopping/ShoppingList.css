@@ -149,6 +149,44 @@
     outline: none;
 }
 
+/* Currency Group Styling */
+.currency-group {
+    display: flex;
+    gap: 0;
+}
+
+.currency-select-input {
+    width: 60px;
+    border-radius: 8px 0 0 8px;
+    border-right: none;
+    flex-shrink: 0;
+}
+
+.budget-input-field {
+    border-radius: 0 8px 8px 0;
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .currency-group {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .currency-select-input {
+        width: 100%;
+        border-radius: 8px;
+        border-right: 1px solid #e0e0e0;
+        /* Restore border */
+    }
+
+    .budget-input-field {
+        width: 100%;
+        border-radius: 8px;
+    }
+}
+
 .add-btn {
     grid-column: 1 / -1;
     background: #2c3e50;

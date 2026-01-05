@@ -152,16 +152,16 @@ function ShoppingList() {
                             />
                         </div>
                         <div className="input-group">
-                            <div style={{ display: 'flex', gap: '0' }}>
+                            <div className="currency-group">
                                 <select
-                                    style={{ width: '60px', borderRadius: '8px 0 0 8px', borderRight: 'none', flexShrink: 0 }}
+                                    className="currency-select-input"
                                     value={newItem.currency}
                                     onChange={e => setNewItem({ ...newItem, currency: e.target.value })}
                                 >
                                     {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
                                 </select>
                                 <input
-                                    style={{ borderRadius: '0 8px 8px 0', flex: 1, minWidth: 0 }}
+                                    className="budget-input-field"
                                     type="number"
                                     placeholder="Budget"
                                     value={newItem.cost}
