@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import {
     LayoutDashboard, CheckSquare, Calendar, Target,
-    Wallet, BookOpen, Settings, LogOut, GraduationCap, X, Menu, Heart
+    Wallet, BookOpen, Settings, LogOut, GraduationCap, X, Menu, Heart, ShoppingCart
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,6 +23,7 @@ export default function Layout({ children }) {
         { path: '/goals', label: 'Goals', icon: Target },
         { path: '/wellness', label: 'Wellness', icon: Heart }, // Added Wellness
         { path: '/finance', label: 'Finances', icon: Wallet },
+        { path: '/shopping', label: 'Shopping', icon: ShoppingCart },
         { path: '/notes', label: 'Notes', icon: BookOpen },
         { path: '/settings', label: 'Settings', icon: Settings },
     ];

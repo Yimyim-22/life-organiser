@@ -1,0 +1,340 @@
+/* ShoppingList.css */
+.shopping-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.shopping-header {
+    margin-bottom: 2rem;
+}
+
+.shopping-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+/* Budget Card */
+.budget-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 10px 20px rgba(118, 75, 162, 0.2);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.budget-info h2 {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.budget-display {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0 0 0;
+}
+
+.budget-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.budget-input {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 0.8rem;
+    color: white;
+    font-size: 1.2rem;
+    width: 150px;
+    outline: none;
+}
+
+.budget-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.currency-select {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 0.8rem;
+    color: white;
+    font-size: 1.2rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.currency-select option {
+    background: #764ba2;
+    color: white;
+}
+
+/* Content Grid */
+.shopping-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .shopping-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sections */
+.section-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Add Item Form */
+.add-item-form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-full {
+    grid-column: 1 / -1;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+}
+
+.add-btn {
+    grid-column: 1 / -1;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-btn:hover {
+    background: #34495e;
+}
+
+/* Shopping List Items */
+.shopping-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.shopping-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s;
+    border-left: 5px solid transparent;
+}
+
+.shopping-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.shopping-item.one-time {
+    border-left-color: #3498db;
+}
+
+.shopping-item.frequent {
+    border-left-color: #2ecc71;
+}
+
+.shopping-item.over-budget {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+}
+
+.item-details h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.1rem;
+    color: #2d3748;
+}
+
+.item-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.item-cost {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.badge-frequent {
+    background: #f0fff4;
+    color: #2f855a;
+}
+
+.badge-one-time {
+    background: #ebf8ff;
+    color: #2b6cb0;
+}
+
+.item-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-purchase {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.btn-purchase:hover {
+    background: #2ecc71;
+    color: white;
+}
+
+.btn-delete {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.btn-delete:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* Recommendations */
+.recommendations-panel {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 1.5rem;
+    height: fit-content;
+}
+
+.rec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.rec-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.rec-item:hover {
+    border-color: #cbd5e0;
+}
+
+.rec-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+.rec-price {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.btn-add-rec {
+    background: #edf2f7;
+    color: #4a5568;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-rec:hover {
+    background: #4299e1;
+    color: white;
+}
+
+/* Totals Warning */
+.budget-warning {
+    color: #fc8181;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}

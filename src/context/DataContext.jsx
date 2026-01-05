@@ -19,6 +19,11 @@ export function DataProvider({ children }) {
     const [assignments, setAssignments] = useLocalStorage('life-organizer-assignments', []);
     const [exams, setExams] = useLocalStorage('life-organizer-exams', []);
 
+    // Shopping Data
+    const [shoppingList, setShoppingList] = useLocalStorage('life-organizer-shopping-list', []); // Active items
+    const [shoppingBudget, setShoppingBudget] = useLocalStorage('life-organizer-shopping-budget', { amount: 0, currency: '₦' });
+    const [shoppingRecommendations, setShoppingRecommendations] = useLocalStorage('life-organizer-shopping-recommendations', []);
+
 
     // --- Task Operations ---
     const addTask = (task) => {
@@ -113,6 +118,55 @@ export function DataProvider({ children }) {
         setHabits([...habits, { ...habit, id: Date.now().toString(), streaks: 0, history: [] }]);
     };
 
+    // --- Shopping Operations ---
+    const addShoppingItem = (item) => {
+        setShoppingList([...shoppingList, { ...item, id: Date.now().toString(), purchased: false }]);
+    };
+
+    const updateShoppingItem = (id, updates) => {
+        setShoppingList(shoppingList.map(item => item.id === id ? { ...item, ...updates } : item));
+    };
+
+    const deleteShoppingItem = (id) => {
+        setShoppingList(shoppingList.filter(item => item.id !== id));
+    };
+
+    const markItemPurchased = (id) => {
+        const item = shoppingList.find(i => i.id === id);
+        if (!item) return;
+
+        // Remove from active list
+        const newShoppingList = shoppingList.filter(i => i.id !== id);
+        setShoppingList(newShoppingList);
+
+        // If frequent, add to recommendations (check for duplicates)
+        if (item.frequency === 'Frequent') {
+            const alreadyRecommended = shoppingRecommendations.some(r => r.name.toLowerCase() === item.name.toLowerCase());
+            if (!alreadyRecommended) {
+                // Remove specific properties that reset per purchase
+                const { id, purchased, ...recommendationData } = item;
+                setShoppingRecommendations([...shoppingRecommendations, { ...recommendationData, id: Date.now().toString() }]);
+            }
+        }
+    };
+
+    const moveRecommendationToActive = (recommendationId) => {
+        const item = shoppingRecommendations.find(r => r.id === recommendationId);
+        if (!item) return;
+
+        // Add to active list
+        const { id, ...itemData } = item;
+        addShoppingItem({ ...itemData, frequency: 'Frequent' }); // Ensure it stays marked as Frequent
+    };
+
+    const deleteRecommendation = (id) => {
+        setShoppingRecommendations(shoppingRecommendations.filter(r => r.id !== id));
+    };
+
+    const updateGeneralBudget = (amount, currency) => {
+        setShoppingBudget({ amount, currency });
+    };
+
     // ... (Other operations can be added as we implement features)
 
     return (
@@ -124,7 +178,10 @@ export function DataProvider({ children }) {
             notes, setNotes,
             classes, setClasses,
             assignments, setAssignments,
-            exams, setExams
+            exams, setExams,
+            shoppingList, addShoppingItem, updateShoppingItem, deleteShoppingItem, markItemPurchased,
+            shoppingBudget, updateGeneralBudget,
+            shoppingRecommendations, moveRecommendationToActive, deleteRecommendation
         }}>
             {children}
         </DataContext.Provider>

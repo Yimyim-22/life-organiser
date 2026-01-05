@@ -13,6 +13,7 @@ import GoalsTracker from './components/goals/GoalsTracker';
 import WellnessTracker from './components/wellness/WellnessTracker';
 import FinanceTracker from './components/finance/FinanceTracker';
 import Notes from './components/notes/Notes';
+import ShoppingList from './components/shopping/ShoppingList';
 import Settings from './components/settings/Settings';
 
 // Protective Wrapper
@@ -32,6 +33,7 @@ function AppRoutes() {
         <Route path="/goals" element={<GoalsTracker />} />
         <Route path="/wellness" element={<WellnessTracker />} />
         <Route path="/finance" element={<FinanceTracker />} />
+        <Route path="/shopping" element={<ShoppingList />} />
         <Route path="/notes" element={<Notes />} />
         {user.occupation === 'Student' && (
           <Route path="/student/*" element={<StudentSection />} />
