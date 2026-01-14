@@ -25,6 +25,7 @@ function ShoppingList() {
         cost: '',
         currency: '₦',
         frequency: 'One-time', // or 'Frequent'
+        quantity: '1',
     });
 
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -43,6 +44,7 @@ function ShoppingList() {
         addShoppingItem({
             ...newItem,
             cost: parseFloat(newItem.cost),
+            quantity: newItem.quantity || '1',
         });
 
         // Reset form but keep currency and frequency preference?
@@ -51,7 +53,8 @@ function ShoppingList() {
             note: '',
             cost: '',
             currency: newItem.currency,
-            frequency: 'One-time'
+            frequency: 'One-time',
+            quantity: '1'
         });
     };
 
@@ -66,6 +69,10 @@ function ShoppingList() {
     // Calculations
     const totalSpentPerCurrency = shoppingList.reduce((acc, item) => {
         const curr = item.currency;
+        // Cost is per item in this model? Or total? 
+        // Usually, cost field implies "Price * Quantity" OR "Unit Price".
+        // Given the simplicity, let's assume 'cost' entered by user is TOTAL cost they expect to pay.
+        // If they enter 2 items and 500 cost, it means 500 total. This avoids complexity of unit price math.
         acc[curr] = (acc[curr] || 0) + (parseFloat(item.cost) || 0);
         return acc;
     }, {});
@@ -151,7 +158,16 @@ function ShoppingList() {
                                 required
                             />
                         </div>
-                        <div className="input-group">
+
+                        <div className="input-group" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
+                            <input
+                                type="number"
+                                placeholder="Qty"
+                                min="1"
+                                value={newItem.quantity}
+                                onChange={e => setNewItem({ ...newItem, quantity: e.target.value })}
+                                style={{ width: '100%', padding: '0.8rem', border: '1px solid #e0e0e0', borderRadius: '8px' }}
+                            />
                             <div className="currency-group">
                                 <select
                                     className="currency-select-input"
@@ -163,13 +179,14 @@ function ShoppingList() {
                                 <input
                                     className="budget-input-field"
                                     type="number"
-                                    placeholder="Budget"
+                                    placeholder="Total Cost"
                                     value={newItem.cost}
                                     onChange={e => setNewItem({ ...newItem, cost: e.target.value })}
                                     required
                                 />
                             </div>
                         </div>
+
                         <div className="input-group form-full">
                             <input
                                 type="text"
@@ -200,21 +217,28 @@ function ShoppingList() {
                         {shoppingList.map(item => {
                             const itemIsOverBudget = shoppingBudget.currency === item.currency &&
                                 shoppingBudget.amount > 0 &&
-                                item.cost > shoppingBudget.amount; // Simple check: item > total budget? 
-                            // Use case: warn if single item eats whole budget.
+                                item.cost > shoppingBudget.amount;
 
                             return (
                                 <div key={item.id} className={`shopping-item ${item.frequency === 'Frequent' ? 'frequent' : 'one-time'} ${itemIsOverBudget ? 'over-budget' : ''}`}>
-                                    <div className="item-details">
+                                    <div className="item-col-name">
                                         <h3>{item.name}</h3>
                                         <div className="item-meta">
-                                            <span className="item-cost">{item.currency}{parseFloat(item.cost).toLocaleString()}</span>
-                                            {item.note && <span>• {item.note}</span>}
+                                            {item.note && <span>{item.note}</span>}
                                             <span className={`badge ${item.frequency === 'Frequent' ? 'badge-frequent' : 'badge-one-time'}`}>
-                                                {item.frequency}
+                                                {item.frequency === 'Frequent' ? 'Freq' : 'One-time'}
                                             </span>
                                         </div>
                                     </div>
+
+                                    <div className="item-col-qty">
+                                        <span className="qty-label">Qty:</span> {item.quantity || 1}
+                                    </div>
+
+                                    <div className="item-col-cost">
+                                        {item.currency}{parseFloat(item.cost).toLocaleString()}
+                                    </div>
+
                                     <div className="item-actions">
                                         <button
                                             className="action-btn btn-purchase"

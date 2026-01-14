@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Organiser - Code Documentation</title>
+    <style>
+        @media print {
+            body { font-size: 12pt; }
+            pre { white-space: pre-wrap; word-break: break-all; }
+            .no-print { display: none; }
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            color: #1a1a1a;
+            background-color: #ffffff;
+        }
+        h1 { font-size: 2.5em; color: #4338ca; border-bottom: 2px solid #e0e7ff; padding-bottom: 10px; margin-bottom: 30px; }
+        h2 { font-size: 1.8em; color: #4f46e5; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; }
+        h3 { font-size: 1.4em; color: #6366f1; margin-top: 25px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; }
+        ul { margin-bottom: 15px; }
+        li { margin-bottom: 5px; }
+        
+        .code-block {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        code {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .component-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .file-path {
+            color: #64748b;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .note {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="background: #eef2ff; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+        <p><strong>How to save as PDF:</strong> Right-click anywhere on this page, select <strong>Print</strong>, and choose <strong>"Save as PDF"</strong> as the destination.</p>
+    </div>
+
+    <h1>Life Organiser - Project Documentation</h1>
+    <p>This document provides a comprehensive technical overview of the Life Organiser application. It covers the architecture, state management, directory structure, and detailed explanations of core components.</p>
+
+    <h2>1. Project Overview</h2>
+    <p><strong>Life Organiser</strong> is a React-based Progressive Web Application (PWA) designed to help users manage tasks, finances, wellness, and academic activities. The application focuses on a user-friendly interface with rich interactions, persistent local storage, and a responsive design suitable for both desktop and mobile devices.</p>
+    <ul>
+        <li><strong>Framework:</strong> React (Vite)</li>
+        <li><strong>State Management:</strong> React Context API + Custom Hooks</li>
+        <li><strong>Persistence:</strong> LocalStorage (Browser)</li>
+        <li><strong>Routing:</strong> React Router DOM</li>
+        <li><strong>Styling:</strong> CSS Modules / Global CSS with CSS Variables for theming</li>
+    </ul>
+
+    <h2>2. Directory Structure</h2>
+    <div class="code-block">
+src/
+├── assets/             # Static images and icons
+├── components/         # UI Components organized by feature
+│   ├── calendar/       # Calendar view implementation
+│   ├── dashboard/      # Main dashboard and widgets
+│   ├── finance/        # Expense and income tracking
+│   ├── goals/          # Goal setting and progress tracking
+│   ├── layout/         # Base layout (Sidebar, Header, Main content)
+│   ├── notes/          # Note-taking functionality
+│   ├── onboarding/     # Initial user setup flow
+│   ├── settings/       # App configuration (Theme, Colors)
+│   ├── shopping/       # Value-added shopping list feature
+│   ├── student/        # Student specific tools (GPA, Classes)
+│   ├── tasks/          # Task management implementation
+│   └── wellness/       # Mood and habit tracking
+├── context/            # Global State Providers
+│   ├── DataContext.jsx # Core application data (Tasks, Finance, etc.)
+│   └── UserContext.jsx # User profile and settings
+├── hooks/              # Custom React Hooks
+│   └── useLocalStorage.js # Synchronization with browser storage
+├── App.jsx             # Main Application Route Configuration
+└── main.jsx            # Application Entry Point
+    </div>
+
+    <h2>3. Core Architecture & State Management</h2>
+    
+    <h3>3.1 Data Persistence (useLocalStorage)</h3>
+    <p>The application relies entirely on browser <code>LocalStorage</code> for data persistence, ensuring user data survives page reloads without needing a backend server.</p>
+    <div class="component-card">
+        <span class="file-path">src/hooks/useLocalStorage.js</span>
+        <p>A custom hook that wraps <code>useState</code>. When the state changes, it automatically writes the new value to <code>localStorage</code>. On initialization, it reads from <code>localStorage</code> or falls back to a default value.</p>
+    </div>
+
+    <h3>3.2 Global Data Context (DataContext)</h3>
+    <div class="component-card">
+        <span class="file-path">src/context/DataContext.jsx</span>
+        <p>This is the "Brain" of the application. It provides central access to:</p>
+        <ul>
+            <li><strong>Tasks:</strong> <code>{ tasks, addTask, toggleTaskCompletion, ... }</code></li>
+            <li><strong>Finance:</strong> <code>{ finance, setFinance }</code></li>
+            <li><strong>Habits & Goals:</strong> Tracking arrays.</li>
+            <li><strong>Shopping List:</strong> Items, budget, and purchasing logic.</li>
+        </ul>
+        <p><strong>Key Logic: Recurring Tasks</strong><br>
+        When a task marked as "Daily" is completed, the system checks if a task for the next day already exists. If not, it automatically creates a duplicate of the task for the following day, ensuring the user always has their daily routine ready.</p>
+    </div>
+
+    <h3>3.3 User Context & Theming</h3>
+    <div class="component-card">
+        <span class="file-path">src/context/UserContext.jsx</span>
+        <p>Manages the user's profile (Name, Occupation) and application settings (Theme, Accent Color). It applies CSS variables dynamically to the <code>document.documentElement</code> to enable real-time theme switching (Light/Dark mode) and custom color accents.</p>
+    </div>
+
+    <h2>4. Feature Components</h2>
+
+    <h3>4.1 Dashboard</h3>
+    <div class="component-card">
+        <span class="file-path">src/components/dashboard/Dashboard.jsx</span>
+        <p>The landing page. It aggregates data from all other contexts to provide a snapshot:</p>
+        <ul>
+            <li><strong>Today's Focus:</strong> Lists high-priority tasks for the current day.</li>
+            <li><strong>Finance Widget:</strong> Shows current calculated balance (Income - Expenses).</li>
+            <li><strong>Student Widget:</strong> (Conditional) Shows upcoming assignment counts if the user is a student.</li>
+            <li><strong>Navigation Grid:</strong> Quick links to all app sections.</li>
+        </ul>
+    </div>
+
+    <h3>4.2 Task Management</h3>
+    <div class="component-card">
+        <span class="file-path">src/components/tasks/TaskList.jsx</span>
+        <p>A comprehensive task manager featuring:</p>
+        <ul>
+            <li><strong>Filtering:</strong> View All, Active, or Completed tasks.</li>
+            <li><strong>Motion Animations:</strong> Uses <code>framer-motion</code> for smooth entry/exit animations.</li>
+            <li><strong>Quick Add:</strong> "Recommended Tasks" chips for one-tap addition of common tasks.</li>
+            <li><strong>Input Logic:</strong> Fields for Title, Date, Time, Priority, and Frequency.</li>
+        </ul>
+    </div>
+
+    <h3>4.3 Shopping Cart</h3>
+    <div class="component-card">
+        <span class="file-path">src/components/shopping/ShoppingList.jsx</span>
+        <p>An advanced shopping list manager designed to track budgets.</p>
+        <ul>
+            <li><strong>Smart Input:</strong> Parses "Item Name - Price" inputs automatically? (Note: manual fields provided for clarity).</li>
+            <li><strong>Budget Tracking:</strong> Real-time comparison of Total Estimated Cost vs. Budget Limit. Shows warnings if over budget.</li>
+            <li><strong>Purchase Flow:</strong> Marking an item as "Purchased" moves it to history. If marked as "Frequent", it is saved effectively as a template for future lists.</li>
+        </ul>
+    </div>
+
+    <h3>4.4 Onboarding Flow</h3>
+    <div class="component-card">
+        <span class="file-path">src/components/onboarding/OnboardingFlow.jsx</span>
+        <p>Runs only if no user is detected in <code>UserContext</code>. It guides the user through:</p>
+        <ol>
+            <li>Welcome Screen</li>
+            <li>Name Input</li>
+            <li>Occupation Selection (Student vs Professional - affects available features)</li>
+            <li>Theme Selection</li>
+        </ol>
+    </div>
+
+    <h2>5. Technical Notes</h2>
+    <ul>
+        <li><strong>Styling:</strong> The app uses standard CSS with extensive use of CSS Variables (<code>--color-primary</code>, <code>--bg-card</code>) to handle theming cleanly.</li>
+        <li><strong>Icons:</strong> Uses <code>lucide-react</code> for consistent, lightweight feather icons.</li>
+        <li><strong>Date Handling:</strong> Uses <code>date-fns</code> for robust date manipulation and comparison.</li>
+    </ul>
+
+</body>
+</html>

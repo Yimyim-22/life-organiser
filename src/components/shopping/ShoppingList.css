@@ -207,18 +207,20 @@
 .shopping-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
 }
 
 .shopping-item {
     background: white;
     border-radius: 12px;
     padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 0.5fr 0.8fr auto;
+    /* Name | Qty | Cost | Actions */
     align-items: center;
+    gap: 1rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     border-left: 5px solid transparent;
 }
 
@@ -240,28 +242,64 @@
     border: 1px solid #feb2b2;
 }
 
-.item-details h3 {
+/* Name Column */
+.item-col-name {
+    min-width: 0;
+    /* Enable truncation usage if needed */
+}
+
+.item-col-name h3 {
     margin: 0 0 0.3rem 0;
     font-size: 1.1rem;
     color: #2d3748;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .item-meta {
     display: flex;
-    gap: 1rem;
-    font-size: 0.9rem;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
     color: #718096;
 }
 
-.item-cost {
+/* Quantity Column */
+.item-col-qty {
+    text-align: center;
     font-weight: 600;
     color: #4a5568;
+    background: #f7fafc;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.qty-label {
+    display: none;
+    /* Hide label on desktop */
+}
+
+/* Cost Column */
+.item-col-cost {
+    text-align: right;
+    font-weight: 700;
+    color: #2d3748;
+    font-size: 1.1rem;
+}
+
+/* Actions Column */
+.item-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
 }
 
 .badge {
-    padding: 0.2rem 0.6rem;
+    padding: 0.1rem 0.6rem;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 700;
@@ -277,17 +315,14 @@
     color: #2b6cb0;
 }
 
-.item-actions {
-    display: flex;
-    gap: 0.75rem;
-}
 
+/* Action Buttons */
 .action-btn {
     border: none;
     background: none;
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 6px;
+    border-radius: 8px;
     transition: background 0.2s;
     display: flex;
     align-items: center;
@@ -320,6 +355,8 @@
     border-radius: 16px;
     padding: 1.5rem;
     height: fit-content;
+    position: sticky;
+    top: 20px;
 }
 
 .rec-list {
@@ -379,4 +416,59 @@
     margin-top: 0.5rem;
     font-size: 0.9rem;
     font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .shopping-item {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "name cost"
+            "meta qty"
+            "actions actions";
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .item-col-name {
+        grid-area: name;
+        font-size: 1.1rem;
+    }
+
+    .item-col-cost {
+        grid-area: cost;
+    }
+
+    .item-meta {
+        grid-area: meta;
+    }
+
+    .item-col-qty {
+        grid-area: qty;
+        font-size: 0.8rem;
+        padding: 2px 8px;
+        align-self: start;
+        justify-self: end;
+        display: flex;
+        gap: 4px;
+    }
+
+    .qty-label {
+        display: inline;
+        font-weight: normal;
+        opacity: 0.7;
+    }
+
+    .item-actions {
+        grid-area: actions;
+        justify-content: stretch;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 0.8rem;
+        margin-top: 0.2rem;
+    }
+
+    .action-btn {
+        flex: 1;
+        padding: 0.8rem;
+    }
 }
