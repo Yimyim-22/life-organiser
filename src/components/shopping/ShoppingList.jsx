@@ -148,63 +148,75 @@ function ShoppingList() {
                     </div>
 
                     {/* Add Item Form */}
+                    {/* Add Item Form */}
                     <form className="add-item-form" onSubmit={handleAddItem}>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                placeholder="Item Name (e.g., Milk)"
-                                value={newItem.name}
-                                onChange={e => setNewItem({ ...newItem, name: e.target.value })}
-                                required
-                            />
-                        </div>
-
-                        <div className="input-group" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
-                            <input
-                                type="number"
-                                placeholder="Qty"
-                                min="1"
-                                value={newItem.quantity}
-                                onChange={e => setNewItem({ ...newItem, quantity: e.target.value })}
-                                style={{ width: '100%', padding: '0.8rem', border: '1px solid #e0e0e0', borderRadius: '8px' }}
-                            />
-                            <div className="currency-group">
-                                <select
-                                    className="currency-select-input"
-                                    value={newItem.currency}
-                                    onChange={e => setNewItem({ ...newItem, currency: e.target.value })}
-                                >
-                                    {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
-                                </select>
+                        <div className="form-row main-row">
+                            <div className="input-wrapper name-wrapper">
                                 <input
-                                    className="budget-input-field"
-                                    type="number"
-                                    placeholder="Total Cost"
-                                    value={newItem.cost}
-                                    onChange={e => setNewItem({ ...newItem, cost: e.target.value })}
+                                    type="text"
+                                    placeholder="Item Name"
+                                    value={newItem.name}
+                                    onChange={e => setNewItem({ ...newItem, name: e.target.value })}
+                                    className="form-input"
                                     required
                                 />
                             </div>
+
+                            <div className="input-wrapper qty-wrapper">
+                                <input
+                                    type="number"
+                                    placeholder="Qty"
+                                    min="1"
+                                    value={newItem.quantity}
+                                    onChange={e => setNewItem({ ...newItem, quantity: e.target.value })}
+                                    className="form-input"
+                                />
+                            </div>
+
+                            <div className="input-wrapper cost-wrapper">
+                                <div className="currency-group">
+                                    <select
+                                        className="currency-select-input"
+                                        value={newItem.currency}
+                                        onChange={e => setNewItem({ ...newItem, currency: e.target.value })}
+                                    >
+                                        {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                    <input
+                                        className="budget-input-field"
+                                        type="number"
+                                        placeholder="Cost"
+                                        value={newItem.cost}
+                                        onChange={e => setNewItem({ ...newItem, cost: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="input-group form-full">
-                            <input
-                                type="text"
-                                placeholder="Notes (optional)"
-                                value={newItem.note}
-                                onChange={e => setNewItem({ ...newItem, note: e.target.value })}
-                            />
+                        <div className="form-row secondary-row">
+                            <div className="input-wrapper notes-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Notes (optional)"
+                                    value={newItem.note}
+                                    onChange={e => setNewItem({ ...newItem, note: e.target.value })}
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="input-wrapper freq-wrapper">
+                                <select
+                                    value={newItem.frequency}
+                                    onChange={e => setNewItem({ ...newItem, frequency: e.target.value })}
+                                    className="form-input"
+                                >
+                                    <option value="One-time">One-time</option>
+                                    <option value="Frequent">Frequent</option>
+                                </select>
+                            </div>
                         </div>
-                        <div className="input-group">
-                            <select
-                                value={newItem.frequency}
-                                onChange={e => setNewItem({ ...newItem, frequency: e.target.value })}
-                            >
-                                <option value="One-time">One-time Purchase</option>
-                                <option value="Frequent">Frequent Item</option>
-                            </select>
-                        </div>
-                        <button type="submit" className="add-btn">Add to List</button>
+
+                        <button type="submit" className="add-btn">Add Item</button>
                     </form>
 
                     {/* Active List */}
