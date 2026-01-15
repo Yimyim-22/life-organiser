@@ -61,6 +61,51 @@ export default function TaskList() {
         high: { color: 'bg-rose-100 text-rose-600', border: 'border-rose-200' }
     };
 
+    // --- Statistics Logic ---
+    const totalMidTasks = tasks.length;
+    const completedTasksCount = tasks.filter(t => t.completed).length;
+    const completionPercentage = totalMidTasks === 0 ? 0 : Math.round((completedTasksCount / totalMidTasks) * 100);
+
+    // Simple Streak Logic: Consecutive days with at least one completed task ending today or yesterday
+    const calculateStreak = () => {
+        if (tasks.filter(t => t.completed).length === 0) return 0;
+
+        const sortedCompletedDates = [...new Set(tasks
+            .filter(t => t.completed && t.date) // Ensure date exists
+            .map(t => t.date)
+        )].sort((a, b) => new Date(b) - new Date(a)); // Descending
+
+        if (sortedCompletedDates.length === 0) return 0;
+
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+        // If no task done today or yesterday, streak is broken
+        if (sortedCompletedDates[0] !== today && sortedCompletedDates[0] !== yesterday) return 0;
+
+        let streak = 0;
+        let currentDate = new Date(sortedCompletedDates[0]);
+
+        for (let i = 0; i < sortedCompletedDates.length; i++) {
+            const dateToCheck = new Date(sortedCompletedDates[i]);
+            // Check if this date is consecutive to the current tracker
+            const diffTime = Math.abs(currentDate - dateToCheck);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (i === 0) {
+                streak = 1;
+            } else {
+                const prevDate = new Date(sortedCompletedDates[i - 1]);
+                const diff = (prevDate - dateToCheck) / (1000 * 60 * 60 * 24);
+                if (diff === 1) streak++;
+                else break;
+            }
+        }
+        return streak;
+    };
+
+    const currentStreak = calculateStreak();
+
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             {/* Header */}
@@ -77,6 +122,41 @@ export default function TaskList() {
                 >
                     <Plus size={20} /> New Task
                 </button>
+            </div>
+
+            {/* Statistics Widgets */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Completion Box */}
+                <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p className="text-slate-500 text-sm font-semibold uppercase tracking-wider">Completion Rate</p>
+                        <h3 className="text-3xl font-bold text-slate-800 mt-1">{completionPercentage}%</h3>
+                    </div>
+                    <div className="w-16 h-16 relative flex items-center justify-center">
+                        <svg className="transform -rotate-90 w-full h-full">
+                            <circle cx="32" cy="32" r="28" stroke="#e2e8f0" strokeWidth="6" fill="transparent" />
+                            <circle cx="32" cy="32" r="28" stroke="#3b82f6" strokeWidth="6" fill="transparent"
+                                strokeDasharray={2 * Math.PI * 28}
+                                strokeDashoffset={2 * Math.PI * 28 * (1 - completionPercentage / 100)}
+                                className="transition-all duration-1000 ease-out"
+                            />
+                        </svg>
+                        <span className="absolute text-xs font-bold text-slate-600">{completedTasksCount}/{totalMidTasks}</span>
+                    </div>
+                </div>
+
+                {/* Streak Box */}
+                <div className="bg-gradient-to-br from-orange-400 to-pink-500 p-6 rounded-2xl shadow-lg shadow-orange-200 text-white flex items-center justify-between">
+                    <div>
+                        <p className="text-white/80 text-sm font-semibold uppercase tracking-wider">Current Streak</p>
+                        <h3 className="text-3xl font-bold mt-1 flex items-center gap-2">
+                            {currentStreak} Days <span className="text-2xl">🔥</span>
+                        </h3>
+                    </div>
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <Zap size={24} className="text-white" fill="white" />
+                    </div>
+                </div>
             </div>
 
             {/* Add Task Form */}
@@ -193,8 +273,8 @@ export default function TaskList() {
                         key={f}
                         onClick={() => setFilter(f)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filter === f
-                                ? 'bg-white text-blue-600 shadow-sm'
-                                : 'text-slate-500 hover:text-slate-700'
+                            ? 'bg-white text-blue-600 shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         {f.charAt(0).toUpperCase() + f.slice(1)}

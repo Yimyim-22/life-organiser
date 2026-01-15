@@ -131,6 +131,17 @@ export default function StudentSection() {
         </form>
     );
 
+    const toggleAssignmentStatus = (id) => {
+        setAssignments(assignments.map(a =>
+            a.id === id ? { ...a, status: a.status === 'completed' ? 'pending' : 'completed' } : a
+        ));
+    };
+
+    // --- Statistics ---
+    const totalAssignments = assignments.length;
+    const completedAssignments = assignments.filter(a => a.status === 'completed').length;
+    const assignmentCompletionMsg = totalAssignments === 0 ? 0 : Math.round((completedAssignments / totalAssignments) * 100);
+
     const renderList = () => {
         const list = activeTab === 'classes' ? classes : activeTab === 'assignments' ? assignments : exams;
 
@@ -150,69 +161,120 @@ export default function StudentSection() {
         );
 
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {list.map((item, index) => (
+            <div className="space-y-6">
+                {/* Assignment Stats Widget */}
+                {activeTab === 'assignments' && list.length > 0 && (
                     <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ delay: index * 0.05 }}
-                        key={item.id}
-                        className="group relative bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-white/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        className="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-sm border border-purple-100 flex items-center justify-between"
                     >
-                        {/* Decorative Gradient Background */}
-                        <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl
-                            ${activeTab === 'classes' ? 'from-blue-500 to-cyan-500' : ''}
-                            ${activeTab === 'assignments' ? 'from-purple-500 to-pink-500' : ''}
-                            ${activeTab === 'exams' ? 'from-pink-500 to-rose-500' : ''}
-                        `} />
-
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`p-3 rounded-xl bg-gradient-to-br text-white shadow-md
-                                    ${activeTab === 'classes' ? 'from-blue-500 to-cyan-500 shadow-blue-200' : ''}
-                                    ${activeTab === 'assignments' ? 'from-purple-500 to-pink-500 shadow-purple-200' : ''}
-                                    ${activeTab === 'exams' ? 'from-pink-500 to-rose-500 shadow-pink-200' : ''}
-                                `}>
-                                    {activeTab === 'classes' && <Book size={20} />}
-                                    {activeTab === 'assignments' && <Calendar size={20} />}
-                                    {activeTab === 'exams' && <GraduationCap size={20} />}
-                                </div>
-                                <button
-                                    onClick={() => deleteItem(item.id, activeTab)}
-                                    className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-700">Assignment Progress</h3>
+                            <p className="text-slate-500 text-sm">Keep up the good work!</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="text-right">
+                                <span className="text-3xl font-bold text-purple-600">{assignmentCompletionMsg}%</span>
+                                <p className="text-xs text-slate-400 font-medium uppercase">Completed</p>
                             </div>
-
-                            <h3 className="text-xl font-bold text-slate-800 mb-1">{item.subject || item.title}</h3>
-
-                            <div className="space-y-2 mt-4">
-                                {(item.date || item.due) && (
-                                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                                        <Clock size={16} className="text-slate-400" />
-                                        <span>
-                                            {new Date(item.date || item.due).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </div>
-                                )}
-                                {item.location && (
-                                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                                        <MapPin size={16} className="text-slate-400" />
-                                        <span>{item.location}</span>
-                                    </div>
-                                )}
-                                {item.notes && (
-                                    <p className="text-sm text-slate-400 italic bg-slate-50 p-2 rounded-lg border border-slate-100 mt-2">
-                                        "{item.notes}"
-                                    </p>
-                                )}
+                            <div className="w-16 h-16 relative">
+                                <svg className="transform -rotate-90 w-full h-full">
+                                    <circle cx="32" cy="32" r="28" stroke="#f3f4f6" strokeWidth="6" fill="transparent" />
+                                    <circle cx="32" cy="32" r="28" stroke="#9333ea" strokeWidth="6" fill="transparent"
+                                        strokeDasharray={2 * Math.PI * 28}
+                                        strokeDashoffset={2 * Math.PI * 28 * (1 - assignmentCompletionMsg / 100)}
+                                        className="transition-all duration-1000 ease-out"
+                                    />
+                                </svg>
                             </div>
                         </div>
                     </motion.div>
-                ))}
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {list.map((item, index) => (
+                        <motion.div
+                            layout
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ delay: index * 0.05 }}
+                            key={item.id}
+                            className={`group relative backdrop-blur-sm p-6 rounded-2xl shadow-sm border hover:shadow-xl hover:-translate-y-1 transition-all duration-300
+                                ${item.status === 'completed' && activeTab === 'assignments' ? 'bg-slate-50/80 border-slate-200' : 'bg-white/80 border-white/50'}
+                            `}
+                        >
+                            {/* Decorative Gradient Background */}
+                            <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl
+                                ${activeTab === 'classes' ? 'from-blue-500 to-cyan-500' : ''}
+                                ${activeTab === 'assignments' ? 'from-purple-500 to-pink-500' : ''}
+                                ${activeTab === 'exams' ? 'from-pink-500 to-rose-500' : ''}
+                            `} />
+
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`p-3 rounded-xl bg-gradient-to-br text-white shadow-md
+                                        ${activeTab === 'classes' ? 'from-blue-500 to-cyan-500 shadow-blue-200' : ''}
+                                        ${activeTab === 'assignments' ? 'from-purple-500 to-pink-500 shadow-purple-200' : ''}
+                                        ${activeTab === 'exams' ? 'from-pink-500 to-rose-500 shadow-pink-200' : ''}
+                                        ${item.status === 'completed' && activeTab === 'assignments' ? 'grayscale opacity-50' : ''}
+                                    `}>
+                                        {activeTab === 'classes' && <Book size={20} />}
+                                        {activeTab === 'assignments' && <Calendar size={20} />}
+                                        {activeTab === 'exams' && <GraduationCap size={20} />}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        {activeTab === 'assignments' && (
+                                            <button
+                                                onClick={() => toggleAssignmentStatus(item.id)}
+                                                className={`p-2 rounded-lg transition-colors ${item.status === 'completed'
+                                                        ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                                                        : 'bg-slate-100 text-slate-400 hover:bg-green-50 hover:text-green-500'
+                                                    }`}
+                                            >
+                                                <ArrowRight size={18} className={item.status === 'completed' ? 'rotate-180' : ''} />
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => deleteItem(item.id, activeTab)}
+                                            className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <h3 className={`text-xl font-bold mb-1 transition-colors ${item.status === 'completed' && activeTab === 'assignments' ? 'text-slate-400 line-through' : 'text-slate-800'
+                                    }`}>
+                                    {item.subject || item.title}
+                                </h3>
+
+                                <div className="space-y-2 mt-4">
+                                    {(item.date || item.due) && (
+                                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                                            <Clock size={16} className="text-slate-400" />
+                                            <span>
+                                                {new Date(item.date || item.due).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {item.location && (
+                                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                                            <MapPin size={16} className="text-slate-400" />
+                                            <span>{item.location}</span>
+                                        </div>
+                                    )}
+                                    {item.notes && (
+                                        <p className="text-sm text-slate-400 italic bg-slate-50 p-2 rounded-lg border border-slate-100 mt-2">
+                                            "{item.notes}"
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         );
     };
