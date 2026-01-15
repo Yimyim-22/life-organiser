@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserContext';
-import { Moon, Sun, Monitor, Type, Zap, Layout, Palette, RotateCcw } from 'lucide-react';
+import { Moon, Sun, Monitor, Type, Zap, Layout, Palette, RotateCcw, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
-    const { settings, updateSettings, logout } = useUser();
+    const { user, updateUser, settings, updateSettings, logout } = useUser();
 
     // Local state for color pickers to avoid laggy inputs
     const [colors, setColors] = useState(settings.customColors || {
@@ -14,11 +14,31 @@ export default function Settings() {
         card: '#ffffff'
     });
 
+    // Local state for profile form
+    const [profileData, setProfileData] = useState({
+        name: user?.name || '',
+        email: user?.email || '',
+        password: user?.password || '',
+        occupation: user?.occupation || 'Student'
+    });
+
     useEffect(() => {
         if (settings.customColors) {
             setColors(prev => ({ ...prev, ...settings.customColors }));
         }
     }, [settings.customColors]);
+
+    // Sync profile data when user changes (e.g. external update or context load)
+    useEffect(() => {
+        if (user) {
+            setProfileData({
+                name: user.name || '',
+                email: user.email || '',
+                password: user.password || '',
+                occupation: user.occupation || 'Student'
+            });
+        }
+    }, [user]);
 
     const handleColorChange = (key, value) => {
         const newColors = { ...colors, [key]: value };
@@ -44,6 +64,12 @@ export default function Settings() {
         updateSettings({ theme });
     };
 
+    const handleProfileSave = (e) => {
+        e.preventDefault();
+        updateUser(profileData);
+        alert('Profile updated successfully!');
+    };
+
     const Section = ({ title, icon: Icon, children }) => (
         <div className="card" style={{ marginBottom: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>
@@ -57,6 +83,76 @@ export default function Settings() {
     return (
         <div className="container" style={{ maxWidth: '800px' }}>
             <h1 className="text-gradient" style={{ marginBottom: '32px' }}>Settings</h1>
+
+            <Section title="Profile Information" icon={User}>
+                <form onSubmit={handleProfileSave} style={{ display: 'grid', gap: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Full Name</label>
+                            <input
+                                type="text"
+                                required
+                                value={profileData.name}
+                                onChange={e => setProfileData({ ...profileData, name: e.target.value })}
+                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-app)', color: 'var(--text-main)' }}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Occupation</label>
+                            <select
+                                value={profileData.occupation}
+                                onChange={e => setProfileData({ ...profileData, occupation: e.target.value })}
+                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-app)', color: 'var(--text-main)' }}
+                            >
+                                <option value="Student">Student</option>
+                                <option value="Office Worker">Office Worker</option>
+                                <option value="Freelancer">Freelancer</option>
+                                <option value="Homemaker">Homemaker</option>
+                                <option value="None">None / Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Email Address</label>
+                        <input
+                            type="email"
+                            required
+                            value={profileData.email}
+                            onChange={e => setProfileData({ ...profileData, email: e.target.value })}
+                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-app)', color: 'var(--text-main)' }}
+                        />
+                    </div>
+
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Password</label>
+                        <input
+                            type="password"
+                            required
+                            value={profileData.password}
+                            onChange={e => setProfileData({ ...profileData, password: e.target.value })}
+                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-app)', color: 'var(--text-main)' }}
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        style={{
+                            justifySelf: 'start',
+                            padding: '10px 24px',
+                            background: 'var(--color-primary)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            marginTop: '8px'
+                        }}
+                    >
+                        Save Profile
+                    </button>
+                </form>
+            </Section>
 
             <Section title="Color Customization" icon={Palette}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '16px' }}>
