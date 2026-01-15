@@ -15,6 +15,7 @@ import FinanceTracker from './components/finance/FinanceTracker';
 import Notes from './components/notes/Notes';
 import ShoppingList from './components/shopping/ShoppingList';
 import Settings from './components/settings/Settings';
+import HabitTracker from './components/habits/HabitTracker';
 
 // Protective Wrapper
 function AppRoutes() {
@@ -29,6 +30,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/tasks" element={<TaskList />} />
+        <Route path="/habits" element={<HabitTracker />} />
         <Route path="/calendar" element={<CalendarView />} />
         <Route path="/goals" element={<GoalsTracker />} />
         <Route path="/wellness" element={<WellnessTracker />} />
