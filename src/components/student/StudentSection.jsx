@@ -37,39 +37,103 @@ export default function StudentSection() {
 
     const renderForm = () => (
         <form onSubmit={handleAddItem} className="space-y-4">
-            <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-500 ml-1">Subject / Title</label>
-                <input
-                    placeholder="e.g. Mathematics"
-                    required
-                    value={newItem.subject || newItem.title || ''}
-                    onChange={e => {
-                        const val = e.target.value;
-                        if (activeTab === 'assignments') setNewItem({ ...newItem, title: val });
-                        else setNewItem({ ...newItem, subject: val });
-                    }}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                />
-            </div>
+            {/* Subject/Title Input Logic */}
+            {activeTab === 'classes' && (
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-500 ml-1">Subject</label>
+                    <input
+                        placeholder="e.g. Mathematics"
+                        required
+                        value={newItem.subject || ''}
+                        onChange={e => setNewItem({ ...newItem, subject: e.target.value })}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                    />
+                </div>
+            )}
+
+            {/* Assignments: Title + Class Select */}
+            {activeTab === 'assignments' && (
+                <>
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-500 ml-1">Assignment Title</label>
+                        <input
+                            placeholder="e.g. Chapter 1 Exercises"
+                            required
+                            value={newItem.title || ''}
+                            onChange={e => setNewItem({ ...newItem, title: e.target.value })}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-500 ml-1">Class (Optional)</label>
+                        <select
+                            value={newItem.subject || ''}
+                            onChange={e => setNewItem({ ...newItem, subject: e.target.value })}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                        >
+                            <option value="">Select a Class</option>
+                            {classes.map(c => (
+                                <option key={c.id} value={c.subject}>{c.subject}</option>
+                            ))}
+                        </select>
+                    </div>
+                </>
+            )}
+
+            {/* Exams: Class Select (becomes Subject) */}
+            {activeTab === 'exams' && (
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-500 ml-1">Subject / Class</label>
+                    <div className="flex gap-2">
+                        <select
+                            required
+                            value={newItem.subject || ''}
+                            onChange={e => setNewItem({ ...newItem, subject: e.target.value })}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                        >
+                            <option value="">Select a Class</option>
+                            {classes.map(c => (
+                                <option key={c.id} value={c.subject}>{c.subject}</option>
+                            ))}
+                        </select>
+                        {/* Fallback/Override if needed? Keeping it simple as per request */}
+                    </div>
+                    {classes.length === 0 && <p className="text-xs text-amber-500 ml-1">Add classes first to select them here.</p>}
+                </div>
+            )}
 
             {activeTab === 'classes' && (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-500 ml-1">Day of Week</label>
+                        <select
+                            required
+                            value={newItem.day || ''}
+                            onChange={e => setNewItem({ ...newItem, day: e.target.value })}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                        >
+                            <option value="">Select Day</option>
+                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                                <option key={day} value={day}>{day}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-500 ml-1">Time</label>
+                        <input
+                            type="time"
+                            required
+                            value={newItem.time || ''}
+                            onChange={e => setNewItem({ ...newItem, time: e.target.value })}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                        />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
                         <label className="text-sm font-semibold text-slate-500 ml-1">Location</label>
                         <input
                             placeholder="Room 101"
                             value={newItem.location || ''}
                             onChange={e => setNewItem({ ...newItem, location: e.target.value })}
-                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-500 ml-1">Time</label>
-                        <input
-                            type="datetime-local"
-                            required
-                            value={newItem.date || ''}
-                            onChange={e => setNewItem({ ...newItem, date: e.target.value })}
                             className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none"
                         />
                     </div>
@@ -229,8 +293,8 @@ export default function StudentSection() {
                                             <button
                                                 onClick={() => toggleAssignmentStatus(item.id)}
                                                 className={`p-2 rounded-lg transition-colors ${item.status === 'completed'
-                                                        ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                                                        : 'bg-slate-100 text-slate-400 hover:bg-green-50 hover:text-green-500'
+                                                    ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                                                    : 'bg-slate-100 text-slate-400 hover:bg-green-50 hover:text-green-500'
                                                     }`}
                                             >
                                                 <ArrowRight size={18} className={item.status === 'completed' ? 'rotate-180' : ''} />
@@ -245,12 +309,32 @@ export default function StudentSection() {
                                     </div>
                                 </div>
 
+                                {/* Subject / Class Badge */}
+                                {(activeTab === 'assignments' || (activeTab === 'exams' && item.subject)) && (
+                                    <div className="mb-1">
+                                        <span className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${activeTab === 'assignments' ? 'bg-purple-100 text-purple-600' : 'bg-pink-100 text-pink-600'
+                                            }`}>
+                                            {item.subject || 'General'}
+                                        </span>
+                                    </div>
+                                )}
+
                                 <h3 className={`text-xl font-bold mb-1 transition-colors ${item.status === 'completed' && activeTab === 'assignments' ? 'text-slate-400 line-through' : 'text-slate-800'
                                     }`}>
-                                    {item.subject || item.title}
+                                    {item.subject && activeTab !== 'exams' && activeTab !== 'assignments' ? item.subject : (item.title || item.subject)}
                                 </h3>
 
                                 <div className="space-y-2 mt-4">
+                                    {/* Handle Weekly Classes Display */}
+                                    {activeTab === 'classes' && (
+                                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                                            <Clock size={16} className="text-slate-400" />
+                                            <span className="font-medium text-slate-700">{item.day}</span>
+                                            <span className="text-slate-400">•</span>
+                                            <span>{item.time}</span>
+                                        </div>
+                                    )}
+
                                     {(item.date || item.due) && (
                                         <div className="flex items-center gap-2 text-sm text-slate-500">
                                             <Clock size={16} className="text-slate-400" />
